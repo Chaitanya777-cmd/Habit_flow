@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <title>HabitFlow — Personal Productivity</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a href="#dashboard" class="brand" data-page="dashboard">
+        <span class="brand-icon">H</span>
+        <span>Habit<span class="brand-accent">Flow</span><small>PERSONAL PRODUCTIVITY</small></span>
+      </a>
+
+      <p class="nav-label">WORKSPACE</p>
+      <nav class="navigation">
+        <button class="nav-item active" data-page="dashboard"><span>◫</span> Overview</button>
+        <button class="nav-item" data-page="habits"><span>✓</span> My Habits</button>
+        <button class="nav-item" data-page="analytics"><span>▥</span> Analytics</button>
+        <button class="nav-item" data-page="calendar"><span>▦</span> Calendar</button>
+      </nav>
+
+      <div class="sidebar-quote">
+        <span class="quote-mark">✦</span>
+        <p>Small steps every day lead to big changes.</p>
+        <small>YOUR DAILY REMINDER</small>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="profile-avatar">HF</div>
+        <div class="profile-copy"><strong>My Journey</strong><small>Building consistency</small></div>
+        <span class="online-dot"></span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button mobile-menu" id="menuToggle" aria-label="Open menu">☰</button>
+          <div><span class="eyebrow">YOUR PERSONAL SPACE</span><div class="topbar-title">Daily Dashboard</div></div>
+        </div>
+        <div class="topbar-right">
+          <span class="today-chip" id="headerDate">Today</span>
+          <button class="icon-button" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">☼</button>
+        </div>
+      </header>
+
+      <section class="page active" id="page-dashboard">
+        <div class="welcome-row">
+          <div>
+            <p class="eyebrow" id="welcomeDate">YOUR DAY, YOUR CHOICE</p>
+            <h1>Make today <span>count.</span></h1>
+            <p class="muted">Progress comes from the little things you do consistently.</p>
+          </div>
+          <button class="primary-button" id="quickAdd">＋ New habit</button>
+        </div>
+
+        <div class="stats-grid">
+          <article class="stat-card">
+            <div class="stat-top"><span>Today's progress</span><span class="stat-icon purple">◉</span></div>
+            <div class="stat-value" id="progressStat">0%</div>
+            <div class="progress-track"><div class="progress-fill" id="progressBar"></div></div>
+            <p class="stat-foot" id="progressFoot">Start with one small win</p>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Habits completed</span><span class="stat-icon green">✓</span></div>
+            <div class="stat-value" id="completedStat">0 <small>/ 0</small></div>
+            <p class="stat-foot">For your selected day</p>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Current streak</span><span class="stat-icon orange">♨</span></div>
+            <div class="stat-value" id="streakStat">0 <small>days</small></div>
+            <p class="stat-foot">Consecutive successful days</p>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span>Best streak</span><span class="stat-icon blue">✦</span></div>
+            <div class="stat-value" id="bestStreakStat">0 <small>days</small></div>
+            <p class="stat-foot">Your personal record</p>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <section class="panel habit-panel">
+            <div class="panel-heading">
+              <div><h2>Today's habits</h2><p class="muted">Show up for yourself, one task at a time.</p></div>
+              <input type="date" id="selectedDate" class="date-input" aria-label="Select habit date">
+            </div>
+            <div class="day-summary"><span id="daySummary">Your daily checklist</span><span id="dayCount">0 / 0 done</span></div>
+            <div id="habitList" class="habit-list"></div>
+            <div id="emptyMessage" class="empty-state">
+              <span class="empty-icon">✦</span>
+              <h3>A fresh start begins here</h3>
+              <p>Add your first habit and build a better routine.</p>
+              <button class="primary-button" id="emptyAdd">＋ Create a habit</button>
+            </div>
+          </section>
+
+          <section class="panel weekly-panel">
+            <div class="panel-heading">
+              <div><h2>Weekly consistency</h2><p class="muted">Your last 7 days at a glance.</p></div>
+              <span class="chart-badge">7 DAYS</span>
+            </div>
+            <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+            <div class="chart-legend"><span><i class="legend-dot"></i> Completion rate</span><strong id="weeklyAverage">0% average</strong></div>
+          </section>
+        </div>
+
+        <section class="panel monthly-panel">
+          <div class="panel-heading">
+            <div><h2>Monthly performance</h2><p class="muted">See how your consistency changes over time.</p></div>
+            <span class="chart-badge" id="monthBadge">THIS MONTH</span>
+          </div>
+          <div class="chart-wrap monthly-chart"><canvas id="monthlyChart"></canvas></div>
+        </section>
+      </section>
+
+      <section class="page" id="page-habits">
+        <div class="page-heading">
+          <div><p class="eyebrow">YOUR ROUTINE</p><h1>My <span>habits.</span></h1><p class="muted">Create routines that support the person you want to become.</p></div>
+          <button class="primary-button" id="habitsAdd">＋ New habit</button>
+        </div>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Habit library</h2><p class="muted">Manage your daily habits here.</p></div><span class="chart-badge" id="habitTotalBadge">0 HABITS</span></div>
+          <div id="allHabitsList" class="habit-list"></div>
+          <div id="allHabitsEmpty" class="empty-state"><h3>No habits yet</h3><p>Create your first habit to get started.</p></div>
+        </section>
+      </section>
+
+      <section class="page" id="page-analytics">
+        <div class="page-heading"><div><p class="eyebrow">YOUR PROGRESS</p><h1>Habit <span>analytics.</span></h1><p class="muted">Understand your consistency through real tracking data.</p></div></div>
+        <div class="stats-grid analytics-stats">
+          <article class="stat-card"><div class="stat-top"><span>All-time completions</span><span class="stat-icon purple">✓</span></div><div class="stat-value" id="allTimeStat">0</div><p class="stat-foot">Recorded completed habits</p></article>
+          <article class="stat-card"><div class="stat-top"><span>Overall success rate</span><span class="stat-icon green">◉</span></div><div class="stat-value" id="overallStat">0%</div><p class="stat-foot">Across recorded habit-days</p></article>
+          <article class="stat-card"><div class="stat-top"><span>Active habits</span><span class="stat-icon blue">✦</span></div><div class="stat-value" id="activeStat">0</div><p class="stat-foot">Habits in your routine</p></article>
+        </div>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Weekly completion rate</h2><p class="muted">Percentage of active habits completed per day.</p></div></div>
+          <div class="chart-wrap large-chart"><canvas id="analyticsWeeklyChart"></canvas></div>
+        </section>
+        <section class="panel top-habits-panel">
+          <div class="panel-heading"><div><h2>Habit performance</h2><p class="muted">Completion rates for habits with recorded history.</p></div></div>
+          <div id="habitPerformance"></div>
+        </section>
+      </section>
+
+      <section class="page" id="page-calendar">
+        <div class="page-heading"><div><p class="eyebrow">YOUR HISTORY</p><h1>Consistency <span>calendar.</span></h1><p class="muted">Every square represents a day in your journey.</p></div></div>
+        <section class="panel">
+          <div class="panel-heading">
+            <div><h2>Activity heatmap</h2><p class="muted">Based on completed habits on each date.</p></div>
+            <div class="month-controls"><button class="icon-button" id="prevMonth" aria-label="Previous month">‹</button><strong id="calendarMonth"></strong><button class="icon-button" id="nextMonth" aria-label="Next month">›</button></div>
+          </div>
+          <div class="heatmap-legend"><span>Less</span><i class="heat h0"></i><i class="heat h1"></i><i class="heat h2"></i><i class="heat h3"></i><i class="heat h4"></i><span>More</span></div>
+          <div class="heatmap-grid" id="heatmapGrid"></div>
+          <p class="muted heatmap-note">Select any day to view its recorded habit completion.</p>
+        </section>
+        <section class="panel">
+          <div class="panel-heading"><div><h2>Selected day</h2><p class="muted" id="calendarSelectedLabel">Choose a date from the calendar.</p></div></div>
+          <div id="calendarDayDetails" class="habit-list"></div>
+        </section>
+      </section>
+
+      <footer class="app-footer"><span>HabitFlow</span> · Small habits. Big results. <span class="footer-right">Your journey, your pace.</span></footer>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="habitModal" hidden>
+    <form class="modal-card" id="habitForm">
+      <div class="modal-heading"><div><p class="eyebrow">BUILD YOUR ROUTINE</p><h2 id="modalTitle">Create a habit</h2></div><button type="button" class="icon-button" id="closeModal" aria-label="Close">×</button></div>
+      <label for="habitName">Habit name</label>
+      <input id="habitName" type="text" maxlength="70" placeholder="e.g. Practice DSA for 30 minutes" required>
+      <label for="habitCategory">Category</label>
+      <select id="habitCategory">
+        <option value="Learning">📚 Learning</option>
+        <option value="Fitness">💪 Fitness</option>
+        <option value="Health">🌿 Health</option>
+        <option value="Mindfulness">🧘 Mindfulness</option>
+        <option value="Productivity">⚡ Productivity</option>
+        <option value="Personal">✨ Personal</option>
+      </select>
+      <label for="habitTarget">Daily target (minutes)</label>
+      <input id="habitTarget" type="number" min="1" max="1440" value="30" required>
+      <div class="modal-actions"><button type="button" class="secondary-button" id="cancelModal">Cancel</button><button class="primary-button" type="submit" id="saveHabitButton">Save habit</button></div>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
